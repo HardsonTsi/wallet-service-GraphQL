@@ -1,9 +1,11 @@
 package com.hardtech.walletservice.services;
 
+import com.hardtech.walletservice.dtos.WalletDTO;
 import com.hardtech.walletservice.entities.Currency;
 import com.hardtech.walletservice.entities.TransactionType;
 import com.hardtech.walletservice.entities.Wallet;
 import com.hardtech.walletservice.entities.WalletTransaction;
+import com.hardtech.walletservice.exceptions.NotFoundException;
 import com.hardtech.walletservice.repositories.CurrencyRepository;
 import com.hardtech.walletservice.repositories.WalletRepository;
 import com.hardtech.walletservice.repositories.WalletTransactionRepository;
@@ -11,7 +13,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -24,7 +26,7 @@ public class WalletService {
     private final CurrencyRepository currencyRepository;
     private final WalletTransactionRepository walletTransactionRepository;
 
-    @PostConstruct
+    //@PostConstruct
     public void loadDate() {
         Random random = new Random();
 
@@ -67,6 +69,29 @@ public class WalletService {
                         walletTransactionRepository.save(walletTransaction);
                     }
                 });
+    }
+
+    public Wallet addWallet(WalletDTO walletDTO) {
+        Currency currency =
+                currencyRepository.findById(walletDTO.getCurrencyCode()).orElseThrow(() -> new NotFoundException(
+                        String.format("Currency %s not found", walletDTO.getCurrencyCode())));
+        Wallet wallet = Wallet.builder()
+                .id(UUID.randomUUID().toString())
+                .createAt(System.currentTimeMillis())
+                .userId(UUID.randomUUID().toString())
+                .currency(currency)
+                .balance(walletDTO.getBalance())
+                .build();
+        return walletRepository.save(wallet);
+    }
+
+    public List<Wallet> userWallets() {
+        return walletRepository.findAll();
+    }
+
+    public Wallet walletById(String id) {
+        return walletRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("Wallet %s not " +
+                "found", id)));
     }
 
 }
