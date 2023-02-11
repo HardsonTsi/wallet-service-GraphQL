@@ -20,6 +20,8 @@ public class WalletTransaction {
     Long id;
     Long timestamp;
     Double amount;
+    Double saleCurrencyPrice;
+    Double purchaseCurrencyPrice;
     @ManyToOne(fetch = FetchType.LAZY)
     Wallet wallet;
     @Enumerated(EnumType.STRING)

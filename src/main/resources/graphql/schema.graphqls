@@ -1,15 +1,23 @@
 type Query{
     userWallets : [Wallet],
     walletById(id: String) : Wallet
+    currencies: [Currency]
 }
 
 type Mutation{
     addWallet(wallet: WalletDTO): Wallet
+    transfer(transfer: TransferDTO): [Wallet]
 }
 
 input WalletDTO{
         balance: Float,
         currencyCode: String
+}
+
+input TransferDTO{
+    sourceId: String,
+    destinationId: String,
+    amount: Float
 }
 
 type Wallet{
@@ -34,5 +42,7 @@ type WalletTransaction{
     timestamp: Float,
     wallet: Wallet,
     amount: Float,
+    saleCurrencyPrice: Float,
+    purchaseCurrencyPrice: Float,
     type: String
 }

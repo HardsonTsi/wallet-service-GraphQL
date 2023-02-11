@@ -1,5 +1,6 @@
 package com.hardtech.walletservice.services;
 
+import com.hardtech.walletservice.dtos.TransferDTO;
 import com.hardtech.walletservice.dtos.WalletDTO;
 import com.hardtech.walletservice.entities.Currency;
 import com.hardtech.walletservice.entities.TransactionType;
@@ -13,6 +14,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -92,6 +94,50 @@ public class WalletService {
     public Wallet walletById(String id) {
         return walletRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("Wallet %s not " +
                 "found", id)));
+    }
+
+    public List<Wallet> transfer(TransferDTO transferDTO) {
+        //get source wallet with id
+        Wallet source = walletRepository.findById(transferDTO.getSourceId()).orElseThrow(() -> new NotFoundException(
+                String.format("Wallet source %s not found", transferDTO.getSourceId())));
+        //get destination wallet with id
+        Wallet destination =
+                walletRepository.findById(transferDTO.getDestinationId()).orElseThrow(() -> new NotFoundException(
+                        String.format("Wallet destination %s not found", transferDTO.getDestinationId())));
+
+        //source transaction
+        WalletTransaction sourceTransaction = WalletTransaction.builder()
+                .wallet(source)
+                .amount(transferDTO.getAmount())
+                .saleCurrencyPrice(source.getCurrency().getSalePrice())
+                .purchaseCurrencyPrice(source.getCurrency().getPurchasePrice())
+                .timestamp(System.currentTimeMillis())
+                .type(TransactionType.DEBIT)
+                .build();
+        walletTransactionRepository.save(sourceTransaction);
+        source.setBalance(source.getBalance() - transferDTO.getAmount());
+
+        Double destinationAmount =
+                transferDTO.getAmount() * (destination.getCurrency().getSalePrice() / source.getCurrency().getPurchasePrice());
+
+        //source transaction
+        WalletTransaction destinationTransaction = WalletTransaction.builder()
+                .wallet(destination)
+                .amount(destinationAmount)
+                .saleCurrencyPrice(destination.getCurrency().getSalePrice())
+                .purchaseCurrencyPrice(destination.getCurrency().getPurchasePrice())
+                .timestamp(System.currentTimeMillis())
+                .type(TransactionType.CREDIT)
+                .build();
+        walletTransactionRepository.save(destinationTransaction);
+        destination.setBalance(destination.getBalance() + destinationAmount);
+
+        return Arrays.asList(source, destination);
+
+    }
+
+    public List<Currency> currencies() {
+        return currencyRepository.findAll();
     }
 
 }

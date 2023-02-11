@@ -1,7 +1,9 @@
 package com.hardtech.walletservice.web;
 
 
+import com.hardtech.walletservice.dtos.TransferDTO;
 import com.hardtech.walletservice.dtos.WalletDTO;
+import com.hardtech.walletservice.entities.Currency;
 import com.hardtech.walletservice.entities.Wallet;
 import com.hardtech.walletservice.services.WalletService;
 import lombok.AllArgsConstructor;
@@ -22,6 +24,11 @@ public class WalletGraphQLController {
         return walletService.addWallet(wallet);
     }
 
+    @MutationMapping
+    public List<Wallet> transfer(@Argument TransferDTO transfer) {
+        return walletService.transfer(transfer);
+    }
+
     @QueryMapping
     public Wallet walletById(@Argument String id) {
         return walletService.walletById(id);
@@ -32,5 +39,9 @@ public class WalletGraphQLController {
         return walletService.userWallets();
     }
 
+    @QueryMapping
+    public List<Currency> currencies() {
+        return walletService.currencies();
+    }
 
 }
