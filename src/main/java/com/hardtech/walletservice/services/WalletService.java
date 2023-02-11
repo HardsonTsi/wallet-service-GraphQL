@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -28,7 +29,7 @@ public class WalletService {
     private final CurrencyRepository currencyRepository;
     private final WalletTransactionRepository walletTransactionRepository;
 
-    //@PostConstruct
+    @PostConstruct
     public void loadDate() {
         Random random = new Random();
 
