@@ -1,0 +1,25 @@
+<!--loader !wallets-->
+<div *ngIf="!wallets">
+    <loader></loader>
+</div>
+
+<!--wallets empty-->
+<div *ngIf="wallets && wallets.length == 0" class="parent">
+    <p>Aucun porteufeuille</p>
+</div>
+
+
+<!--wallets-->
+<div *ngIf="wallets && wallets.length != 0" class="wallet-parent">
+
+    <!--wallet-->
+    <div *ngFor="let wallet of wallets" class="wallet-child z-depth-1">
+        <wallet-card [wallet]="wallet"
+        (deleteWalletTrigger)="deleteWallet($event)"></wallet-card>
+    </div>
+
+
+</div>
+
+
+<a class="fixed-action-btn"><i class="material-icons teal">add</i></a>
