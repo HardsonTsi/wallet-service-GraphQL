@@ -1,20 +1,29 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import {Currency, Wallet, WalletDTO} from "../../Wallet";
 import {WalletService} from "../services/wallet.service";
-import {ActivationStart, Router} from "@angular/router";
+import {Router} from "@angular/router";
+import {ToastService} from "../services/toast.service";
 
 @Component({
     selector: 'app-home',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit{
 
     wallets: Wallet[];
     currencies: Currency[];
+    walletDTO: WalletDTO = new WalletDTO();
+    walletFormState: boolean = false;
+    walletFormStateTrigger(state: boolean){
+        this.walletFormState = state
+    }
+
     constructor(private router: Router,
+                private toastService: ToastService,
                 private walletService: WalletService) {
     }
+
 
     ngOnInit(): void {
         this.getWallets()
@@ -22,41 +31,30 @@ export class HomeComponent implements OnInit {
 
     getWallets() {
         this.walletService.getWallets()
-            .valueChanges.subscribe(({data}) => {
+            .subscribe(({data}) => {
             this.wallets = data.userWallets
-            console.log(this.wallets)
+            this.wallets = this.wallets.reverse()
         }, error => console.log(error))
     }
 
     addWallet(){
-        let walletDTO: WalletDTO = new WalletDTO()
-        walletDTO.balance = 0
-        walletDTO.currencyCode = 'USD'
-        this.walletService.addWallet(walletDTO)
+        this.walletService.addWallet(this.walletDTO)
             .subscribe(
                 ({data}) => {
-                    console.log(data)
+                    this.walletFormStateTrigger(false)
+                    this.walletDTO = new WalletDTO()
+                    this.toastService.showToast('Portefeuille ajouté')
                     this.getWallets()
                 },
-                error => console.log(error))
-    }
-
-
-
-    deleteWallet(id: string){
-        this.walletService.deleteWallet(id)
-            .valueChanges.subscribe(
-            ({data}) => {
-                this.getWallets()
-                console.log(data)
-            },
-            error => console.log(error)
-        )
+                error => {
+                    console.log(error)
+                    this.toastService.showToast('Portefeuille non ajouté')
+                })
     }
 
     getCurrencies() {
         this.walletService.getCurrencies()
-            .valueChanges.subscribe(({data}) => {
+            .subscribe(({data}) => {
                 this.currencies = data.currencies
             }, error => console.log(error)
         )

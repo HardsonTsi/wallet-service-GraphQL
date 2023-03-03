@@ -26,14 +26,27 @@
 </head>
 <body>
 
-<!--
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
--->
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-<script></script>
+<script>
+
+  //tooltip
+  $(document).ready(function(){
+    $('.tooltipped').tooltip();
+  });
+
+  //dropdown
+  $('.dropdown-trigger').dropdown();
+
+  (document).ready(function() {
+    $('select').formSelect();
+    // Old way
+    // $('select').material_select();
+  })
+
+</script>
 
 <app-root></app-root>
+
 </body>
 </html>

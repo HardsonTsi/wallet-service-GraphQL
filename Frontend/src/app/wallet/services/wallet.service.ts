@@ -22,7 +22,7 @@ export class WalletService {
                 }
             }
         }`
-        return this.apollo.watchQuery<any>({
+        return this.apollo.subscribe<any>({
             query: getWallets
         })
     }
@@ -41,7 +41,7 @@ export class WalletService {
                 }
             }
         }`
-        return this.apollo.watchQuery<any>({
+        return this.apollo.subscribe<any>({
             query: getWalletById,
             variables: {
                 walletId: walletId
@@ -82,11 +82,24 @@ export class WalletService {
         let deleteWallet = gql`query($id: String){
             deleteWallet(id: $id)
         }`
-        return this.apollo.watchQuery<any>({
+        return this.apollo.subscribe<any>({
             query: deleteWallet,
             variables: {
                 id: walletId
             }
+        })
+    }
+
+    getCurrencies() {
+        let getCurrencies = gql`query {
+            currencies {
+                code,
+                name,
+                salePrice
+            }
+        }`
+        return this.apollo.subscribe<any>({
+            query: getCurrencies
         })
     }
 
@@ -97,17 +110,6 @@ export class WalletService {
     transformBalance(amount: number, currency: string){
         return this.currencyPipe.transform(amount, currency);
     }
-    getCurrencies() {
-        let getCurrencies = gql`query {
-            currencies {
-                code,
-                name,
-                salePrice
-            }
-        }`
-        return this.apollo.watchQuery<any>({
-            query: getCurrencies
-        })
-    }
+
 
 }

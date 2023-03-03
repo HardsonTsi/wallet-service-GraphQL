@@ -45,7 +45,7 @@ export class WalletDetailsComponent implements OnInit {
 
     getWalletById(walletId: string) {
         this.walletService.getWalletById(walletId)
-            .valueChanges.subscribe(
+            .subscribe(
             ({data}) => {
                 this.wallet = data.walletById
                 console.log(data.walletById)
@@ -60,10 +60,10 @@ export class WalletDetailsComponent implements OnInit {
         this.walletService.doTransfer(this.transfer)
             .subscribe(
                 datas => {
-                    this.getWalletById(this.id)
                     this.transfer = new TransferDTO()
                     this.transferFormStateTrigger(false)
                     this.toastService.showToast('Transaction effectué')
+                    this.getWalletById(this.id)
                 },
                 error => {
                     console.log(error)
@@ -72,6 +72,24 @@ export class WalletDetailsComponent implements OnInit {
             )
     }
 
+    deleteWallet(id: string){
+        this.walletService.deleteWallet(id)
+            .subscribe(
+            ({data}) => {
+                console.log(data)
+                this.toastService.showToast('Portefeuille supprimé')
+                this.goBack()
+            },
+            error => {
+                console.log(error)
+                this.toastService.showToast('Portefeuille non supprimé')
+            }
+        )
+    }
+
+    copyId(){
+        this.toastService.showToast('Id copié')
+    }
     goBack() {
         this.router.navigate(['home'])
     }

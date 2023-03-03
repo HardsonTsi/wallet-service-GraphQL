@@ -4,110 +4,138 @@
 </div>
 
 <!--wallet-->
-<div *ngIf="wallet" class="wallet-parent">
+<div *ngIf="wallet">
 
-    <div class="wallet-child">
-        <div class="row">
-            <i class="material-icons">account_balance_wallet</i>
-        </div>
-        <div class="row">
-            <a class="chip">Id</a> {{wallet.id}}
-        </div>
-        <div class="row">
-            <a class="chip">Solde</a>
-            <a class="{{wallet.balance | balance}}-text">{{this.walletService.transformWalletBalance(wallet)}}</a>
-        </div>
-        <div class="row">
-            <i class="material-icons">delete_forever</i>
-        </div>
-    </div>
-</div>
-
-<div class="center">
-    <a (click)="transferFormStateTrigger(true)"
-       class="btn center">
-        Nouvelle transaction
-        <i class="material-icons">add</i>
-    </a>
-
-</div>
-
-<!--formulaire nouvelle transaction-->
-<div class="container">
-
-    <div *ngIf="tranferFormState" style="margin-top: 10px">
-        <form #transaction="ngForm" (ngSubmit)="doTransfer()"
-              class="col s10">
+    <!--portefeuille-->
+    <div class="wallet-parent">
+        <div class="wallet-child">
             <div class="row">
+                <i class="material-icons teal-text text-lighten-3">account_balance_wallet</i>
+            </div>
+            <div class="row">
+                <a class="chip">Id</a> {{wallet.id}}
 
-                <div class="input-field col s12">
-                    <input #destinataire="ngModel"
-                           [(ngModel)]="transfer.destinationId"
-                           required
-                           pattern="^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[8|9|aA|bB][0-9a-f]{3}-[0-9a-f]{12}$"
-                           id="destination"
-                           name="destination"
-                           type="text">
-                    <label class="active" for="destination">Destinataire</label>
-                </div>
-
-                <div class="input-field col s12">
-                    <input #amount="ngModel"
-                           [(ngModel)]="transfer.amount"
-                           required
-                           pattern="^-?\d+(?:\.\d+)?$"
-                           id="amount"
-                           name="amount"
-                           type="text">
-                    <label class="active" for="amount">Montant</label>
-                </div>
+                <!--copie presse-papier-->
+                <a (click)="copyId()" [cdkCopyToClipboard]="wallet.id">
+                    <i class="material-icons grey-text">content_copy</i>
+                </a>
 
             </div>
-
-            <button [disabled]="!transaction.form.valid"
-                    class="btn" type="submit">
-                Valider
-            </button>
-
-            <a (click)="transferFormStateTrigger(false)"
-               class="btn teal-text white"
-               style="margin-left: 20px">Annuler
-            </a>
-
-        </form>
+            <div class="row">
+                <a class="chip">Solde</a>
+                <a class="{{wallet.balance | balance}}-text">{{this.walletService.transformWalletBalance(wallet)}}</a>
+            </div>
+            <div class="row">
+                <i (click)="deleteWallet(wallet.id)" class="material-icons red-text text-lighten-2">delete_sweep</i>
+            </div>
+        </div>
     </div>
 
-</div>
-
-<!--transactions-->
-<div *ngIf="wallet" class="container">
-
-    <!--!transactions-->
-    <h1 class="center teal-text">Transcations</h1>
-    <div *ngIf="wallet.walletTransactions.length == 0"
-         class="center grey-text">Aucune transactions
+    <!--button nouvelle transaction-->
+    <div class="center">
+        <a (click)="transferFormStateTrigger(true)"
+           class="btn center">
+            Nouvelle transaction
+            <i class="material-icons left">add</i>
+        </a>
     </div>
 
-    <div *ngIf="wallet.walletTransactions.length != 0">
-        <table class="highlight centered">
-            <thead>
-            <tr>
-                <th>Type</th>
-                <th>Montant</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let transaction of wallet.walletTransactions" class="center">
-                <td class="chip {{transaction.type | transaction}}
+    <!--formulaire nouvelle transaction-->
+    <div class="container">
+
+        <div *ngIf="tranferFormState" style="margin-top: 30px">
+            <form #transaction="ngForm" (ngSubmit)="doTransfer()"
+                  class="col s10">
+                <div class="row">
+
+                    <div class="input-field col s12">
+                        <input #destinataire="ngModel"
+                               [(ngModel)]="transfer.destinationId"
+                               id="destination"
+                               name="destination"
+                               pattern="^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[8|9|aA|bB][0-9a-f]{3}-[0-9a-f]{12}$"
+                               required
+                               type="text">
+                        <label class="active" for="destination">Destinataire</label>
+                    </div>
+
+                    <label [hidden]="destinataire.valid || destinataire.pristine"
+                           class="red-text text-lighten-3">
+                        L'id du destinataire est obligatoire
+                    </label>
+
+                    <label [hidden]="destinataire.value != wallet.id"
+                           class="red-text text-lighten-3">
+                        Transfert impossible
+                    </label>
+
+                    <div class="input-field col s12">
+                        <input #amount="ngModel"
+                               [(ngModel)]="transfer.amount"
+                               id="amount"
+                               name="amount"
+                               pattern="[+]?\d*\.?\d+$"
+                               required
+                               type="number">
+                        <label class="active" for="amount">Montant</label>
+                    </div>
+
+                </div>
+
+                <button [disabled]="!transaction.form.valid"
+                        class="btn" type="submit">
+                    Valider
+                </button>
+
+                <a (click)="transferFormStateTrigger(false)"
+                   class="btn teal-text white"
+                   style="margin-left: 20px">Annuler
+                </a>
+
+            </form>
+        </div>
+
+    </div>
+
+    <!--transactions-->
+    <div class="container">
+
+        <!--!transactions-->
+        <h2 class="center teal-text">Transcations</h2>
+        <div *ngIf="wallet.walletTransactions.length == 0"
+             class="center grey-text">Aucune transactions
+        </div>
+
+        <div *ngIf="wallet.walletTransactions.length != 0">
+            <table class="highlight centered">
+                <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Montant</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let transaction of wallet.walletTransactions" class="center">
+                    <td class="chip {{transaction.type | transaction}}
                         lighten-2 white-text"
-                    style="margin-top: 10px">{{transaction.type}}</td>
-                <td>{{walletService.transformBalance(transaction.amount, wallet.currency.name)}}</td>
-            </tr>
-            </tbody>
-        </table>
+                        style="margin-top: 10px">{{transaction.type}}</td>
+                    <td>{{walletService.transformBalance(transaction.amount, wallet.currency.name)}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
     </div>
 
+
 </div>
+
+
+
+
+
+
+
 
 
 

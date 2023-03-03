@@ -3,23 +3,91 @@
     <loader></loader>
 </div>
 
-<!--wallets empty-->
-<div *ngIf="wallets && wallets.length == 0" class="parent">
-    <p>Aucun porteufeuille</p>
-</div>
-
 
 <!--wallets-->
-<div *ngIf="wallets && wallets.length != 0" class="wallet-parent">
+<div *ngIf="wallets" id="addwallet">
 
-    <!--wallet-->
-    <div *ngFor="let wallet of wallets" class="wallet-child z-depth-1">
-        <wallet-card [wallet]="wallet"
-        (deleteWalletTrigger)="deleteWallet($event)"></wallet-card>
+    <!--formulaire portefeuille-->
+    <div class="container">
+        <div *ngIf="walletFormState" style="margin-top: 30px">
+            <form #walletForm="ngForm" (ngSubmit)="addWallet()"
+                  class="col s10">
+                <div class="row">
+
+                    <!--solde initial-->
+                    <div class="input-field col s12">
+                        <input #balance="ngModel"
+                               [(ngModel)]="walletDTO.balance"
+                               pattern="[+]?\d*\.?\d+$"
+                               id="balance"
+                               name="balance"
+                               required
+                               type="number">
+                        <label class="active" for="balance">Solde initial</label>
+                    </div>
+
+
+                    <label [hidden]="balance.valid || balance.pristine"
+                           class="red-text text-lighten-3">
+                        Le solde initial est obligatoire
+                    </label>
+
+
+                    <!--monnaie-->
+                    <label>Monnaie</label>
+                    <select #currency="ngModel"
+                            [(ngModel)]="walletDTO.currencyCode"
+                            required
+                            id="currency"
+                            name="currency"
+                            class="browser-default">
+                        <option disabled selected class="col s12">Choisir la monnaie</option>
+                        <option *ngFor="let currency of currencies"
+                                value="{{currency.code}}"
+                                class="col s12">
+                            {{currency.code}}
+                        </option>
+                    </select>
+
+
+                </div>
+
+                <button [disabled]="!walletForm.form.valid"
+                        class="btn" type="submit">
+                    Valider
+                </button>
+
+                <a (click)="walletFormStateTrigger(false)"
+                   class="btn teal-text white"
+                   style="margin-left: 20px">Annuler
+                </a>
+
+            </form>
+        </div>
     </div>
 
+    <!--wallets empty-->
+    <div *ngIf="wallets.length == 0" class="parent">
+        <p>Aucun portefeuille</p>
+    </div>
+
+    <!--wallets not empty-->
+    <div *ngIf="wallets.length != 0" class="wallet-parent">
+
+        <!--wallets list-->
+        <div *ngFor="let wallet of wallets" class="wallet-child z-depth-1">
+            <wallet-card [wallet]="wallet"></wallet-card>
+        </div>
+
+    </div>
 
 </div>
 
-
-<a class="fixed-action-btn"><i class="material-icons teal">add</i></a>
+<!--ajouter portefeuille-->
+<a href="home#addwallet" (click)="walletFormStateTrigger(true)"
+   class="fixed-action-btn tooltipped" data-position="top"
+   data-tooltip="Ajouter un portefeuille">
+    <i (click)="getCurrencies()"
+       class="material-icons medium circle teal white-text">
+        add</i>
+</a>
