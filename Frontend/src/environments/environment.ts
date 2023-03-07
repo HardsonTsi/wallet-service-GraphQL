@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  API_URL: 'http://localhost:8080/graphql'
+  API_URL: 'https://wallet-back-eekf.onrender.com/graphql'
 };
 
 /*
