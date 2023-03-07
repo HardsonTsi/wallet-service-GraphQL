@@ -34,7 +34,7 @@ export class HomeComponent implements OnInit{
             .subscribe(({data}) => {
             this.wallets = data.userWallets
             this.wallets = this.wallets.reverse()
-        }, error => console.log(error))
+        }, error => console.log('Erreur de récupération des portefeuilles'))
     }
 
     addWallet(){
@@ -47,7 +47,7 @@ export class HomeComponent implements OnInit{
                     this.getWallets()
                 },
                 error => {
-                    console.log(error)
+                    console.log('Erreur de création du portefeuille')
                     this.toastService.showToast('Portefeuille non ajouté')
                 })
     }
@@ -56,7 +56,7 @@ export class HomeComponent implements OnInit{
         this.walletService.getCurrencies()
             .subscribe(({data}) => {
                 this.currencies = data.currencies
-            }, error => console.log(error)
+            }, error => console.log('Erreur de récupération des devises')
         )
     }
 

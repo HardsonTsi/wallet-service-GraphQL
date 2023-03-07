@@ -3,7 +3,6 @@ import {TransferDTO, Wallet} from "../../Wallet";
 import {WalletService} from "../services/wallet.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ToastService} from "../services/toast.service";
-import {CurrencyPipe} from "@angular/common";
 
 @Component({
     selector: 'wallet-details',
@@ -48,9 +47,8 @@ export class WalletDetailsComponent implements OnInit {
             .subscribe(
             ({data}) => {
                 this.wallet = data.walletById
-                console.log(data.walletById)
             },
-            error => console.log(error)
+            error => console.log('Erreur de récupération du portefeuille')
         )
     }
 
@@ -66,7 +64,7 @@ export class WalletDetailsComponent implements OnInit {
                     this.getWalletById(this.id)
                 },
                 error => {
-                    console.log(error)
+                    console.log('Echec de la transaction')
                     this.toastService.showToast('Echec de la transaction')
                 }
             )
@@ -76,12 +74,11 @@ export class WalletDetailsComponent implements OnInit {
         this.walletService.deleteWallet(id)
             .subscribe(
             ({data}) => {
-                console.log(data)
                 this.toastService.showToast('Portefeuille supprimé')
                 this.goBack()
             },
             error => {
-                console.log(error)
+                console.log('Erreur de suppresion du portefeuille')
                 this.toastService.showToast('Portefeuille non supprimé')
             }
         )
