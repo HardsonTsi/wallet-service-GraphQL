@@ -9,7 +9,7 @@ import {CurrencyPipe} from "@angular/common";
 export class WalletService {
 
     constructor(private apollo: Apollo,
-                private currencyPipe: CurrencyPipe,) {
+                private currencyPipe: CurrencyPipe) {
     }
 
     getWallets() {

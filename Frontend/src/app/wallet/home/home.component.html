@@ -1,18 +1,10 @@
-<nav>
-    <div class="nav-wrapper teal">
-        <a class="brand-logo center" routerLink="">Wallet GraphQL</a>
-    </div>
-</nav>
-
-
 <!--loader !wallets-->
 <div *ngIf="!wallets">
     <loader></loader>
 </div>
 
-
 <!--wallets-->
-<div *ngIf="wallets" id="addwallet">
+<div *ngIf="wallets" >
 
     <!--formulaire portefeuille-->
     <div class="container">

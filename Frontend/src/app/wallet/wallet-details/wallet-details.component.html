@@ -6,17 +6,20 @@
 <!--wallet-->
 <div *ngIf="wallet">
 
+    <!--button retour-->
+    <div class="container back-btn">
+        <i (click)="goBack()" class="material-icons medium teal-text">arrow_back</i>
+    </div>
+
     <!--portefeuille-->
     <div class="wallet-parent">
 
-        <div>
-            <i (click)="goBack()" class="material-icons medium teal-text">arrow_back</i>
-        </div>
-
         <div class="wallet-child">
+
             <div class="row">
                 <i class="material-icons teal-text text-lighten-3">account_balance_wallet</i>
             </div>
+
             <div class="row">
                 <a class="chip">Id</a> {{wallet.id}}
 
