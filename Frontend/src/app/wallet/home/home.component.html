@@ -1,3 +1,10 @@
+<nav>
+    <div class="nav-wrapper teal">
+        <a class="brand-logo center" routerLink="">Wallet GraphQL</a>
+    </div>
+</nav>
+
+
 <!--loader !wallets-->
 <div *ngIf="!wallets">
     <loader></loader>
@@ -84,7 +91,7 @@
 </div>
 
 <!--ajouter portefeuille-->
-<a href="home#addwallet" (click)="walletFormStateTrigger(true)"
+<a *ngIf="wallets" href="#addwallet" (click)="walletFormStateTrigger(true)"
    class="fixed-action-btn tooltipped" data-position="top"
    data-tooltip="Ajouter un portefeuille">
     <i (click)="getCurrencies()"

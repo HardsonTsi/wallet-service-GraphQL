@@ -4,13 +4,13 @@ import {HomeComponent} from "./home/home.component";
 import {WalletDetailsComponent} from "./wallet-details/wallet-details.component";
 
 const routes: Routes = [
-    {path: 'home', component: HomeComponent},
+    {path: '', component: HomeComponent},
     {path: 'wallet/:id', component: WalletDetailsComponent},
-    {path: '**', redirectTo: 'home', pathMatch: 'full'}
+    {path: '**', redirectTo: '', pathMatch: 'full'}
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes)],
+    imports: [RouterModule.forChild(routes)],
     exports: [RouterModule]
 })
 export class WalletRoutingModule {

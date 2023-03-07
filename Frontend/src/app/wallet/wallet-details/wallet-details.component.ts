@@ -88,7 +88,7 @@ export class WalletDetailsComponent implements OnInit {
         this.toastService.showToast('Id copié')
     }
     goBack() {
-        this.router.navigate(['home'])
+        this.router.navigate([''])
     }
 
 }

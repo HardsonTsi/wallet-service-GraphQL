@@ -11,8 +11,6 @@ import { BalancePipe } from './pipes/balance.pipe';
 import {WalletService} from "./services/wallet.service";
 import {ClipboardModule} from "@angular/cdk/clipboard";
 
-
-
 @NgModule({
   declarations: [
     HomeComponent,
