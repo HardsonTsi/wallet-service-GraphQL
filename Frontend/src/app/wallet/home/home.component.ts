@@ -34,7 +34,7 @@ export class HomeComponent implements OnInit{
             .subscribe(({data}) => {
             this.wallets = data.userWallets
             this.wallets = this.wallets.reverse()
-        }, error => console.log('Erreur de récupération des portefeuilles'))
+        }, error => console.log(error))
     }
 
     addWallet(){
