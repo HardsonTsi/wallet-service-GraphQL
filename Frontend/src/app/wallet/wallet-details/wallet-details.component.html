@@ -67,15 +67,15 @@
                         <label class="active" for="destination">Destinataire</label>
                     </div>
 
-                    <label [hidden]="destinataire.valid || destinataire.pristine"
+                    <span [hidden]="destinataire.valid || destinataire.pristine"
                            class="red-text text-lighten-3">
                         L'id du destinataire est obligatoire
-                    </label>
+                    </span>
 
-                    <label [hidden]="destinataire.value != wallet.id"
+                    <span [hidden]="destinataire.value != wallet.id"
                            class="red-text text-lighten-3">
                         Transfert impossible
-                    </label>
+                    </span>
 
                     <div class="input-field col s12">
                         <input #amount="ngModel"
@@ -90,7 +90,7 @@
 
                 </div>
 
-                <button [disabled]="!transaction.form.valid"
+                <button [disabled]="!transaction.form.valid && destinataire.value != wallet.id"
                         class="btn" type="submit">
                     Valider
                 </button>
